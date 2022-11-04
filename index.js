@@ -10,6 +10,10 @@ app.listen(PORT, () => {
   console.log("listing on port ", PORT);
 });
 
+app.get("/", (req, res) => {
+  res.status(200).send("Hello world 🌏");
+})
+
 app.get("/content", async (req, res) => {
   const url = req.query.url;
   const response = await axios.get(url);
