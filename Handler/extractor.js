@@ -1,6 +1,16 @@
 var fs = require("fs");
 var parser = require("./parser");
 
+function numOfSentences(sentence) {
+    // xử lý dữ liệu nhập vào trả về list các câu
+    sentence = sentence.replaceAll("\n", "");
+    sentence = parser.convertAbbreviations(sentence);
+    sentence = sentence.replaceAll("?", ".");
+    sentence = sentence.replaceAll("!", ".");
+    var sentences = sentence.split(".");
+    return sentences.length;
+}
+
 function getSentences(sentence) {
     // xử lý dữ liệu nhập vào trả về list các câu
     sentence = sentence.replaceAll("\n", "");
@@ -32,4 +42,5 @@ function getWords(word) {
 module.exports = {
     getWords,
     getSentences,
+    numOfSentences,
 };
