@@ -18,12 +18,9 @@ app.post("/", (req, res) => {
 });
 
 app.post("/content", async (req, res) => {
-  // console.log(req.params);
   try {
     const num = req.query.params.split(" ")[1];
     const type = req.query.params.split(" ")[0];
-    console.log(type);
-    console.log(num);
     var article;
     if (type == "viaLink") {
       const url = req.query.url;
@@ -34,12 +31,17 @@ app.post("/content", async (req, res) => {
     if (type == "local") {
       article = req.query.data;
     }
-    if (num < localExtractor.numOfSentences(article)) {
+    var numOfSentences = localExtractor.numOfSentences(article);
+    if (num == undefined){
+      var sumArticle = summary.summarize(article, numOfSentences);
+      res.status(200).send(sumArticle);
+    } 
+    else if (num <= numOfSentences) {
       var sumArticle = summary.summarize(article, num);
       res.status(200).send(sumArticle);
     }
     else {
-      res.status(200).send("THE INPUT NUMBER CAN'T BE LONGER THAN THE ARTICLE.")
+      res.status(200).send("UNABLE TO SUMMARIZE TO GIVEN NUMBER OF SENTENCES. MINIMUM NUMBER OF SENTENCES CAN BE SUMMARIZED TO IS "+  (numOfSentences) +".")
     }
   }
   catch (e) {
