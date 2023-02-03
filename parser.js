@@ -67,41 +67,16 @@ function groupQuotes(sentences) {
     return newList;
 }
 
-// function isIsolatedQuotation(sentence) {
-//     // Check câu có phải là 1 quote riêng biệt
-//     if (sentence.charAt(0) == '\"' && sentence.charAt(1) == ' ')
-//         return true;
-//     else
-//         return false;
-// }
-
-// function isQuotationWithPeriod(sentence) {
-//     // Check câu có phải là quote bị tách ra không
-//     if (sentence.charAt(0) == '\"' && sentence.charAt(1) == '.')
-//         return true;
-//     else
-//         return false;
-// }
-
 function cleanupQuotes(sentences) {
-    // Xử lý Quotes
+    // Xử lý Quotes trước khi group
     var generified = [];
     for (var sentence of sentences) {
         sentence.replaceAll('“', '\"');
         sentence.replaceAll('”', '\"');
         generified.push(sentence);
     }
-    var newList = [];
-    newList.push(generified[0]);
-    for (var i = 1; i < sentences.length; i++) {
-        var sentence = sentences[i];
-        // if (isIsolatedQuotation(sentence) && isQuotationWithPeriod(sentence)) {
-        //     sentence = sentence.substring(2);
-        //     newList[newList.length - 1] += "\"";
-        // }
-        newList.push(sentence);
-    }
-    return newList;
+
+    return generified;
 }
 
 function addPeriods(sentences) {
@@ -158,7 +133,6 @@ function fixBrokenSentences(sentences) {
             flag = false;
             continue;
         }
-
         var tArray = sentence.split(" ");
         var lastWord = tArray[tArray.length - 1];
         lastWord = removePunctuation(lastWord);
@@ -179,7 +153,7 @@ function fixBrokenSentences(sentences) {
 }
 
 function convertAbbreviations(sentence) {
-    // Sửa câu bị lỗi do viết tắt có dấu chấm bằng cách bỏ dấu chấm và check từ câu dài trường hợp nhiều dấu chấm
+    //Sửa câu bị lỗi do viết tắt có dấu chấm bằng cách bỏ dấu chấm và check từ câu dài trường hợp nhiều dấu chấm
     //Y.C.m.b
     var abbreviation = fs.readFileSync("Data/abbreviations_multi.txt");
     var abbreviations = abbreviation.toString().split("\n");
@@ -208,11 +182,7 @@ function cleanWord(word) {
 
 function removeWhiteSpace(word) {
     // Bỏ dấu cách đầu cuối
-    var newWord = word;
-    while (newWord != "" && newWord.charAt(0) == ' ')
-        newWord = newWord.substring(1);
-    while (newWord != "" && newWord.charAt(newWord.length - 1) == ' ')
-        newWord = newWord.substring(0, word.length - 2);
+    var newWord = word.trim();
     return newWord;
 }
 
@@ -222,6 +192,14 @@ function removeWhiteSpaceList(sentences) {
         newList.push(removeWhiteSpace(sentence));
     }
     return newList;
+}
+
+function removeNumTag(sentence){
+    var newSentence = sentence;
+    newSentence = newSentence.replaceAll("[", " [");
+    for(var i=0;i<99999;i++)
+        newSentence = newSentence.replaceAll("[" + i +"]", "");
+    return newSentence;
 }
 
 module.exports = {
@@ -234,4 +212,5 @@ module.exports = {
     cleanWord,
     groupQuotes,
     commaHandler,
+    removeNumTag,
 };

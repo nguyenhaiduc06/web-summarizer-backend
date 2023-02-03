@@ -1,22 +1,23 @@
 var fs = require("fs");
 var parser = require("./parser");
-var filter = require("./filter");
 
 function numOfSentences(sentence) {
     // xử lý dữ liệu nhập vào trả về list các câu
-    var sentences = getSentences(sentence);
-    sentences = filter.omitTransitionSentences(sentences);
+    sentence = sentence.replaceAll("\n", "");
+    sentence = parser.convertAbbreviations(sentence);
+    sentence = sentence.replaceAll("?", ".");
+    sentence = sentence.replaceAll("!", ".");
+    var sentences = sentence.split(".");
     return sentences.length;
 }
 
 function getSentences(sentence) {
     // xử lý dữ liệu nhập vào trả về list các câu
-    sentence = sentence.replaceAll("\n", " ");
-    sentence = parser.removeNumTag(sentence);
+    sentence = sentence.replaceAll("\n", "");
     sentence = parser.convertAbbreviations(sentence);
     sentence = sentence.replaceAll("?", ".");
     sentence = sentence.replaceAll("!", ".");
-    var sentences = sentence.split(". ");
+    var sentences = sentence.split(".");
     sentences = parser.fixBrokenSentences(sentences);
     sentences = parser.removeWhiteSpaceList(sentences);
     sentences = parser.removeBlanks(sentences);
