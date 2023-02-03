@@ -48,3 +48,33 @@ app.post("/content", async (req, res) => {
     res.status(400).send(e);
   }
 });
+
+app.get("/summerized", async (req, res) => {
+  const percentByLength = {
+    short: 0.25,
+    medium: 0.5,
+    long: 0.75,
+  };
+  const { type, rawText, url, length } = req.body;
+  let article;
+
+  if (type == "url") {
+    const response = await axios.get(url);
+    const data = unfluff(response.data, "en");
+    article = data.text;
+  } else {
+    article = rawText;
+  }
+
+  const originalSentencesCount = localExtractor.numOfSentences(article);
+  const summarizedSentencesCount = Math.round(
+    originalSentencesCount * percentByLength[length]
+  );
+
+  const summerizedArticle = summary.summarize(
+    article,
+    summarizedSentencesCount
+  );
+
+  res.status(200).send(summerizedArticle);
+});
