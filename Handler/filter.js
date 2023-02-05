@@ -3,18 +3,13 @@ var process = require("process");
 var args = process.argv;
 var extractor = require("./extractor");
 // module này để gắn các câu có liên quan tới nhau thành 1 (câu sau có các từ nối như because of that)
-function trim(line) {
-    // bỏ hết dấu trống (/s) đầu và cuối câu
-    return line.replace(/^\s+|\s+$/gm, '');
-}
-
 function getTransitionPhrases() {
     // lấy các từ nối từ data
     var tLines = fs.readFileSync("Data/transition_phrases.txt").toString();
     var lines = tLines.split("\n");
     result = [];
     for (var line of lines)
-        result.push(trim(line));
+        result.push(line.trim());
     return result;
 }
 
@@ -32,9 +27,19 @@ function omitTransitionSentences(sentences) {
     // ghép
     var transitionPhrases = getTransitionPhrases();
     result = [];
-    for (var sentence of sentences)
-        if (!isTransitionPhrase(transitionPhrases, sentence))
-            result.push(sentence);
+    for (var sentence of sentences){
+        if (isTransitionPhrase(transitionPhrases, sentence)){
+            var tList = sentence.split(" ");
+            tList[0] = tList[0].toLowerCase();
+            var tSentence = "";
+            for (var word of tList)
+                 tSentence += (" " + word);
+            var handlingSentence = result[result.length-1];
+            handlingSentence = handlingSentence.substring(0,handlingSentence.length-2);
+            handlingSentence+= ("," + tSentence);
+        }
+        else result.push(sentence);
+    }
     return result;
 }
 

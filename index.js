@@ -75,16 +75,20 @@ app.post("/summerized", async (req, res) => {
     long: 0.75,
   };
   const { article, length } = req.body;
+  console.log("🚀 ~ length", length)
 
   const originalSentencesCount = localExtractor.numOfSentences(article);
+  console.log("🚀 ~ originalSentencesCount", originalSentencesCount)
   const summarizedSentencesCount = Math.floor(
     originalSentencesCount * percentByLength[length]
   );
+  console.log("🚀 ~ summarizedSentencesCount", summarizedSentencesCount)
 
   const summerizedArticle = summary.summarize(
     article,
     summarizedSentencesCount
   );
+  console.log("🚀 ~ summerizedArticle", summerizedArticle)
 
   res.status(200).json({ summerizedArticle });
 });

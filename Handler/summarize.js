@@ -11,9 +11,9 @@ function summarize(article, numOfSentences) {
     var wordScores = scoring.getWordScore(allWords);
     var allSentences = extractor.getSentences(article);
     allSentences = filter.omitTransitionSentences(allSentences);
-    var sentenceScores = scoring.getScoreList(allSentences, wordScores)
+    var sentenceScores = scoring.getScoreList(allSentences, wordScores);
     var threshold = scoring.xHighestScore(sentenceScores, numOfSentences);
-    var topSentences = scoring.topSentences(allSentences, sentenceScores, threshold)
+    var topSentences = scoring.topSentences(allSentences, sentenceScores, threshold);
     var summary = "";
     for (var sentence of topSentences)
         summary += sentence + " ";

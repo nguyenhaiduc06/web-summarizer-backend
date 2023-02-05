@@ -4,7 +4,6 @@ var parser = require("./parser");
 // module chấm điểm
 function getWordScore(allWords) {
     // Trả lại HashMap với key là từ và value là số lần xuất hiện của từ tương ứng
-    var ignoredWords;
     var dictionary = new Map();
     var wordsToIgnore = fs.readFileSync("Data/words_to_ignore.txt").toString().split("\n");
     for (var i = 0; i < allWords.length; i++) {
@@ -69,17 +68,17 @@ function getScoreList(allSentences, wordScores) {
     return sScore;
 }
 
-// function printPopular(dictionary, sortedItems, top = 10) {
-//     // In top 10 từ xuất hiện nhiều nhất
-//     if (top >= sortedItems.length)
-//         top = sortedItems.length - 1;
-//     console.log("Rank:", "Score:", "Content:");
-//     for (var i = 0; i < top; i++) {
-//         word = sortedItems[i];
-//         count = dictionary.get(word);
-//         console.log("#" + (i + 1) + ".", count, word);
-//     }
-// }
+function printPopular(dictionary, sortedItems, top = 10) {
+    // In top 10 từ xuất hiện nhiều nhất
+    if (top >= sortedItems.length)
+        top = sortedItems.length - 1;
+    console.log("Rank:", "Score:", "Content:");
+    for (var i = 0; i < top; i++) {
+        word = sortedItems[i];
+        count = dictionary.get(word);
+        console.log("#" + (i + 1) + ".", count, word);
+    }
+}
 
 function xHighestScore(sentenceScores, x) {
     // Tìm từ có điểm top x
