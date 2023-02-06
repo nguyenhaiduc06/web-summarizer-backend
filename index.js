@@ -16,7 +16,7 @@ app.listen(PORT, () => {
   console.log("listing on port", PORT);
 });
 
-app.post("/", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).send("Hello world 🌏");
 });
 
