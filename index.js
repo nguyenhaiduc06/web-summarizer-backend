@@ -55,7 +55,7 @@ app.post("/content", async (req, res) => {
   }
 });
 
-app.post("/parsed-from-url", async (req, res) => {
+app.post("/summerized", async (req, res) => {
   try {
     const { url } = req.body;
     console.log("🚀 ~ url", url);
@@ -68,7 +68,7 @@ app.post("/parsed-from-url", async (req, res) => {
   }
 });
 
-app.post("/summerized", async (req, res) => {
+app.post("/parsed-from-url", async (req, res) => {
   const percentByLength = {
     short: 0.25,
     medium: 0.5,
