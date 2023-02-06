@@ -1,5 +1,4 @@
 var fs = require("fs");
-const { words_to_ignore_path } = require("../Data/filePaths");
 var extractor = require("./extractor");
 
 // module chấm điểm
@@ -116,7 +115,7 @@ function refineArticle(sentences) {
 
 function getSentencesSimilarity(sentences) {
     //lấy điểm các câu
-    var wordsToIgnore = fs.readFileSync(words_to_ignore_path).toString().split("\n");
+    var wordsToIgnore = fs.readFileSync("Data/words_to_ignore.txt").toString().split("\n");
     var tSentences = refineArticle(sentences);
     var similarityDict = [];
     for (var i = 0; i < tSentences.length; i++) {
