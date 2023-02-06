@@ -11,7 +11,7 @@ function numOfSentences(sentence) {
 
 function getSentences(sentence) {
     // xử lý dữ liệu nhập vào trả về list các câu
-    sentence = sentence.replaceAll("\n", " ");
+    sentence = sentence.replaceAll(/(\r\n|\n|\r)/gm, " ");
     sentence = parser.removeNumTag(sentence);
     sentence = parser.convertAbbreviations(sentence);
     sentence = sentence.replaceAll("?", ".");

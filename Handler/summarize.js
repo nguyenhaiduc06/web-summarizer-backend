@@ -14,7 +14,6 @@ function summarize(article, numOfSentences) {
     var sentenceSimilarity = scoring.getSentencesSimilarity(allSentences);
     var sentenceScores = scoring.getScoreList(sentenceSimilarity);
     var threshold = scoring.xHighestScore(sentenceScores, numOfSentences);
-    console.log(threshold);
     var topSentences = scoring.topSentences(allSentences, sentenceScores, threshold);
     var summary = "";
     for (var sentence of topSentences)
