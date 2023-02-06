@@ -1,11 +1,12 @@
 var fs = require("fs");
 var process = require("process");
+const { transition_phrases_path } = require("../Data/filePaths");
 var args = process.argv;
 var extractor = require("./extractor");
 // module này để gắn các câu có liên quan tới nhau thành 1 (câu sau có các từ nối như because of that)
 function getTransitionPhrases() {
     // lấy các từ nối từ data
-    var tLines = fs.readFileSync("Data/transition_phrases.txt").toString();
+    var tLines = fs.readFileSync(transition_phrases_path).toString();
     var lines = tLines.split("\n");
     result = [];
     for (var line of lines)

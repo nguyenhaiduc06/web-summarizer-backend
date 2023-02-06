@@ -1,4 +1,5 @@
 var fs = require("fs");
+const { abbreviations_multi_path, abbreviations_path } = require("../Data/filePaths");
 // var process = require("process");
 // var args = process.argv;
 
@@ -123,7 +124,7 @@ function toSingular(word) {
 
 function fixBrokenSentences(sentences) {
     // Sửa câu bị lỗi do viết tắt có dấu chấm (bằng cách chuyển về dạng nguyên bản r check từ điển) trường hợp 1 dấu chấm
-    var abbreviation = fs.readFileSync("Data/abbreviations.txt");
+    var abbreviation = fs.readFileSync(abbreviations_path);
     var abbreviations = abbreviation.toString().split("\n");
     var newList = [];
     var flag = false;
@@ -155,7 +156,7 @@ function fixBrokenSentences(sentences) {
 function convertAbbreviations(sentence) {
     //Sửa câu bị lỗi do viết tắt có dấu chấm bằng cách bỏ dấu chấm và check từ câu dài trường hợp nhiều dấu chấm
     //Y.C.m.b
-    var abbreviation = fs.readFileSync("Data/abbreviations_multi.txt");
+    var abbreviation = fs.readFileSync(abbreviations_multi_path);
     var abbreviations = abbreviation.toString().split("\n");
     var newSentence = sentence;
     var abbreviationsInString = [];
