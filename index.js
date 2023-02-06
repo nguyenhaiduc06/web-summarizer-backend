@@ -7,23 +7,6 @@ const summary = require("./Handler/summarize");
 const localExtractor = require("./Handler/extractor");
 var fs = require("fs");
 
-const allowCors = fn => async (req, res) => {
-  res.setHeader('Access-Control-Allow-Credentials', true)
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  // another common pattern
-  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  )
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
-  }
-  return await fn(req, res)
-}
-
 app.use(cors());
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -72,7 +55,7 @@ app.post("/content", async (req, res) => {
   }
 });
 
-app.post("/parsed-from-url", async allowCors((req, res) => {
+app.post("/parsed-from-url", async (req, res) => {
   try {
     const { url } = req.body;
     console.log("🚀 ~ url", url);
@@ -83,9 +66,9 @@ app.post("/parsed-from-url", async allowCors((req, res) => {
   } catch (e) {
     res.status(404).json(e);
   }
-}));
+});
 
-app.post("/summerized", async allowCors((req, res) => {
+app.post("/summerized", async (req, res) => {
   const percentByLength = {
     short: 0.25,
     medium: 0.5,
@@ -108,4 +91,4 @@ app.post("/summerized", async allowCors((req, res) => {
   console.log("🚀 ~ summerizedArticle", summerizedArticle)
 
   res.status(200).json({ summerizedArticle });
-}));
+});
