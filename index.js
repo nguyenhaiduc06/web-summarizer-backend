@@ -69,26 +69,30 @@ app.post("/parsed-from-url", async (req, res) => {
 });
 
 app.post("/summerized", async (req, res) => {
-  const percentByLength = {
-    short: 0.25,
-    medium: 0.5,
-    long: 0.75,
-  };
-  const { article, length } = req.body;
-  console.log("🚀 ~ length", length)
+  try {
+    const percentByLength = {
+      short: 0.25,
+      medium: 0.5,
+      long: 0.75,
+    };
+    const { article, length } = req.body;
+    console.log("🚀 ~ length", length);
 
-  const originalSentencesCount = localExtractor.numOfSentences(article);
-  console.log("🚀 ~ originalSentencesCount", originalSentencesCount)
-  const summarizedSentencesCount = Math.floor(
-    originalSentencesCount * percentByLength[length]
-  );
-  console.log("🚀 ~ summarizedSentencesCount", summarizedSentencesCount)
+    const originalSentencesCount = localExtractor.numOfSentences(article);
+    console.log("🚀 ~ originalSentencesCount", originalSentencesCount);
+    const summarizedSentencesCount = Math.floor(
+      originalSentencesCount * percentByLength[length]
+    );
+    console.log("🚀 ~ summarizedSentencesCount", summarizedSentencesCount);
 
-  const summerizedArticle = summary.summarize(
-    article,
-    summarizedSentencesCount
-  );
-  console.log("🚀 ~ summerizedArticle", summerizedArticle)
+    const summerizedArticle = summary.summarize(
+      article,
+      summarizedSentencesCount
+    );
+    console.log("🚀 ~ summerizedArticle", summerizedArticle);
 
-  res.status(200).json({ summerizedArticle });
+    res.status(200).json({ summerizedArticle });
+  } catch (e) {
+    res.status(404).json(e);
+  }
 });
