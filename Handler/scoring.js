@@ -8,7 +8,7 @@ var extractor = require("./extractor");
 //     var wordsToIgnore = fs.readFileSync("Data/words_to_ignore.txt").toString().split("\n");
 //     for (var i = 0; i < allWords.length; i++) {
 //         var word = allWords[i];
-//         if (wordsToIgnore.includes(word))
+//         if (wordsToIgnore.includes(word)) 
 //             continue;
 //         var count = 1.0;
 //         var dictKeys = Array.from(dictionary, ([key, value]) => (key));
