@@ -113,11 +113,16 @@ function refineArticle(sentences) {
     return tSentences;
 }
 
-function getSentencesScores(sentences) {
+function getSentencesSimilarity(sentences) {
     //lấy điểm các câu
     var wordsToIgnore = fs.readFileSync("Data/words_to_ignore.txt").toString().split("\n");
     var tSentences = refineArticle(sentences);
-    var scoresDict = [];
+    var similarityDict = [];
+    for (var i = 0; i < tSentences.length; i++) {
+        var tArray = [];
+        tArray.push(i);
+        similarityDict.push(tArray);
+    }
     for (var i = 0; i < tSentences.length; i++) {
         for (var j = i + 1; j < tSentences.length; j++) {
             var tSet = new Set();
@@ -139,34 +144,64 @@ function getSentencesScores(sentences) {
                             tSet.add(word);
             var tmp = tSet.size;
             var score = tmp / (Math.log2(num1) + Math.log2(num2));
-            scoresDict.push(score + " " + i + " " + j);
+            similarityDict[i].push(score);
+            similarityDict[j].push(score);
         }
     }
-    return scoresDict;
+    return similarityDict;
 }
 
-function topSentences(allSentences, sentenceScores, x) {
+function getScoreList(sentencesSimilaritiy) {
+    //lấy điểm các câu
+    var formerDict = [];
+    var latterDict = [];
+    for (var i = 0; i < sentencesSimilaritiy.length; i++) {
+        latterDict.push(1);
+    }
+    for (var i = 0; i < 30; i++) {
+        formerDict = latterDict.slice(0);
+        latterDict = [];
+        for (var list of sentencesSimilaritiy) {
+            var tmp = 1;
+            var tmp1 = 0;
+            var tmp2 =0;
+            while (tmp < list.length) {
+                if (tmp - 1 == list[0]){
+                    tmp1++;
+                }
+                tmp2 += (list[tmp] * formerDict[tmp1]);
+                tmp++;
+                tmp1++;
+            }
+            var score = 0.15 + (0.85 * tmp2 / (formerDict.length-1));
+            latterDict.push(score);
+        }
+    }
+    return latterDict;
+}
+
+function xHighestScore(sentenceScores, x) {
+    // Tìm từ có điểm top x
     var list = [];
     for (var score of sentenceScores)
         list.push(score);
-    list.sort((a, b) => parseFloat(b.split(" ")[0]) - parseFloat(a.split(" ")[0]));
-    var resultNum = new Set();
-    var i = 0;
-    while (resultNum.size < x) {
-        resultNum.add(parseInt(list[i].split(" ")[1]));
-        resultNum.add(parseInt(list[i].split(" ")[2]));
-        i++;
-    }
-    var resultArray = Array.from(resultNum).sort((a, b) => a - b);
-    if(resultNum.size > x)
-        resultArray.pop();
+    list.sort((a, b) => b - a);
+    return list[x - 1];
+}
+
+function topSentences(allSentences, sentenceScores, threshold) {
+    // trả danh sách các câu có điểm > threhold
     var result = [];
-    for (var num of resultArray)
-        result.push(allSentences[num]);
+    for (var i = 0; i < allSentences.length; i++)
+        if (sentenceScores[i] >= threshold)
+            result.push(allSentences[i]);
     return result;
 }
 
+
 module.exports = {
-    getSentencesScores,
+    getSentencesSimilarity,
+    getScoreList,
+    xHighestScore,
     topSentences,
 };
