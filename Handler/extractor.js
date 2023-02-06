@@ -38,8 +38,19 @@ function getWords(word) {
     return words;
 }
 
+function getWords1(sentence) {
+    // xử lý dữ liệu nhập vào trả về list các từ
+    var tSentence = sentence.replaceAll(".","");
+    var words = tSentence.split(" ");
+    words = parser.removeBlanks(words);
+    for (var i = 0; i < words.length; i++)
+        words[i] = parser.cleanWord(words[i]);
+    return words;
+}
+
 module.exports = {
     getWords,
+    getWords1,
     getSentences,
     numOfSentences,
 };
