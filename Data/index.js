@@ -387,6 +387,8 @@ Y.W.C.A.
 Y.W.H.A.`.split("\n");
 
 const abbreviations = `
+No.
+no.
 A.
 a.
 abl.
