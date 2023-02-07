@@ -35,7 +35,7 @@ function omitTransitionSentences(sentences) {
             for (var word of tList)
                  tSentence += (" " + word);
             var handlingSentence = result[result.length-1];
-            handlingSentence = handlingSentence.substring(0,handlingSentence.length-2);
+            handlingSentence = handlingSentence?.substring(0,handlingSentence.length-2);
             handlingSentence+= ("," + tSentence);
         }
         else result.push(sentence);
