@@ -9,7 +9,7 @@ function getTransitionPhrases() {
     // var tLines = fs.readFileSync("Data/transition_phrases.txt").toString();
     // var lines = tLines.split("\n");
     var lines = Data.transition_phrases;
-    console.log("🚀 ~ lines", lines)
+    // console.log("🚀 ~ lines", lines)
     result = [];
     for (var line of lines)
         result.push(line.trim());
