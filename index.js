@@ -93,6 +93,7 @@ app.post("/summerized", async (req, res) => {
 
     res.status(200).json({ summerizedArticle });
   } catch (e) {
+    console.log("🚀 ~ e", e)
     res.status(200).json(e);
   }
 });

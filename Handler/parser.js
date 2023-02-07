@@ -1,4 +1,5 @@
 var fs = require("fs");
+const Data = require("../Data");
 // var process = require("process");
 // var args = process.argv;
 
@@ -123,8 +124,9 @@ function toSingular(word) {
 
 function fixBrokenSentences(sentences) {
     // Sửa câu bị lỗi do viết tắt có dấu chấm (bằng cách chuyển về dạng nguyên bản r check từ điển) trường hợp 1 dấu chấm
-    var abbreviation = fs.readFileSync("Data/abbreviations.txt");
-    var abbreviations = abbreviation.toString().split("\n");
+    // var abbreviation = fs.readFileSync("Data/abbreviations.txt");
+    // var abbreviations = abbreviation.toString().split("\n");
+    var abbreviations = Data.abbreviations;
     var newList = [];
     var flag = false;
     for (var i = 0; i < sentences.length; i++) {
@@ -155,8 +157,9 @@ function fixBrokenSentences(sentences) {
 function convertAbbreviations(sentence) {
     //Sửa câu bị lỗi do viết tắt có dấu chấm bằng cách bỏ dấu chấm và check từ câu dài trường hợp nhiều dấu chấm
     //Y.C.m.b
-    var abbreviation = fs.readFileSync("Data/abbreviations_multi.txt");
-    var abbreviations = abbreviation.toString().split("\n");
+    // var abbreviation = fs.readFileSync("Data/abbreviations_multi.txt");
+    // var abbreviations = abbreviation.toString().split("\n");
+    var abbreviations = Data.abbreviations_multi;
     var newSentence = sentence;
     var abbreviationsInString = [];
     for (var word of abbreviations) {
