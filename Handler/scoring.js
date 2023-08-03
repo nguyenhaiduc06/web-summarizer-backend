@@ -2,104 +2,6 @@ var fs = require("fs");
 var extractor = require("./extractor");
 var Data = require("../Data");
 
-// module chấm điểm
-// function getWordScore(allWords) {
-//     // Trả lại HashMap với key là từ và value là số lần xuất hiện của từ tương ứng
-//     var dictionary = new Map();
-//     var wordsToIgnore = fs.readFileSync("Data/words_to_ignore.txt").toString().split("\n");
-//     for (var i = 0; i < allWords.length; i++) {
-//         var word = allWords[i];
-//         if (wordsToIgnore.includes(word)) 
-//             continue;
-//         var count = 1.0;
-//         var dictKeys = Array.from(dictionary, ([key, value]) => (key));
-//         if (dictKeys.includes(word))
-//             count += dictionary.get(word);
-//         dictionary.set(word, count);
-//     }
-//     return dictionary;
-// }
-
-// function count(word, sentence) {
-//     // Đếm số lần xuất hiện của từ trong câu
-//     var tLWords = sentence.split(" ");
-//     var count = 0;
-//     for (var i = 0; i < tLWords.length; i++)
-//         if (word == tLWords[i])
-//             count++;
-//     return count;
-// }
-
-// function score(sentence, wordScores) {
-//     // Tính điểm của câu (wordScores là data số điểm)
-//     var denominator = 1.0;
-//     var score = 0.0;
-//     var words = sentence.split(" ");
-//     for (var i = 0; i < words.length; i++) {
-//         var word = words[i];
-//         var wordScoreKeys = Array.from(wordScores, ([key, value]) => (key));
-//         if (!(wordScoreKeys.includes(word)))
-//             continue;
-//         if (count(word, sentence) == 1)
-//             denominator += 1.0;
-//         word = parser.cleanWord(word);
-//         score += wordScores.get(word);
-//     }
-//     return (score / denominator);
-// }
-
-// function getSentenceScoreDict(allSentences, wordScores) {
-//     // Trả lại HashMap với key là câu và value là điểm mỗi câu tương ứng 
-//     var dictionary = new Map();
-//     for (var i = 0; i < allSentences.length; i++) {
-//         var sentence = allSentences[i];
-//         var temp = score(sentence, wordScores);
-//         dictionary.set(sentence, temp);
-//     }
-//     return dictionary;
-// }
-
-// function getScoreList(allSentences, wordScores) {
-//     // Trả lại danh sách điểm cùng thứ tự với câu
-//     var sScore = [];
-//     for (var i = 0; i < allSentences.length; i++) {
-//         var sentence = allSentences[i];
-//         sScore.push(score(sentence, wordScores));
-//     }
-//     return sScore;
-// }
-
-// function printPopular(dictionary, sortedItems, top = 10) {
-//     // In top 10 từ xuất hiện nhiều nhất
-//     if (top >= sortedItems.length)
-//         top = sortedItems.length - 1;
-//     console.log("Rank:", "Score:", "Content:");
-//     for (var i = 0; i < top; i++) {
-//         word = sortedItems[i];
-//         count = dictionary.get(word);
-//         console.log("#" + (i + 1) + ".", count, word);
-//     }
-// }
-
-// function xHighestScore(sentenceScores, x) {
-//     // Tìm từ có điểm top x
-//     var list = [];
-//     for (var score of sentenceScores)
-//         list.push(score);
-//     list.sort((a, b) => b - a);
-//     return list[x - 1];
-// }
-
-
-// function topSentences(allSentences, sentenceScores, threshold) {
-//     // trả danh sách các câu có điểm > threhold
-//     var result = [];
-//     for (var i = 0; i < allSentences.length; i++)
-//         if (sentenceScores[i] >= threshold)
-//             result.push(allSentences[i]);
-//     return result;
-// }
-
 function refineArticle(sentences) {
     //chuyển tất cả các chữ trong article về dạng thường để chấm điểm
     var tSentences = [];
@@ -116,16 +18,15 @@ function refineArticle(sentences) {
 
 function getSentencesSimilarity(sentences) {
     //lấy điểm các câu
-    // var wordsToIgnore = fs.readFileSync("Data/words_to_ignore.txt").toString().split("\n");
     var wordsToIgnore = Data.words_to_ignore;
     var tSentences = refineArticle(sentences);
     var similarityDict = [];
     for (var i = 0; i < tSentences.length; i++) {
         var tArray = [];
-        tArray.push(i);
         similarityDict.push(tArray);
     }
     for (var i = 0; i < tSentences.length; i++) {
+        similarityDict[i].push(1);
         for (var j = i + 1; j < tSentences.length; j++) {
             var tSet = new Set();
             var sentence1 = tSentences[i];
@@ -155,31 +56,30 @@ function getSentencesSimilarity(sentences) {
 
 function getScoreList(sentencesSimilaritiy) {
     //lấy điểm các câu
-    var formerDict = [];
-    var latterDict = [];
+    var formerList = [];
+    var latterList = [];
     for (var i = 0; i < sentencesSimilaritiy.length; i++) {
-        latterDict.push(1);
+        latterList.push(1);
+    }
+    if(sentencesSimilaritiy.length == 1){
+        return latterList;
     }
     for (var i = 0; i < 30; i++) {
-        formerDict = latterDict.slice(0);
-        latterDict = [];
+        formerList = latterList.slice(0);
+        latterList = [];
         for (var list of sentencesSimilaritiy) {
-            var tmp = 1;
-            var tmp1 = 0;
-            var tmp2 =0;
-            while (tmp < list.length) {
-                if (tmp - 1 == list[0]){
-                    tmp1++;
+            var tmp = 0;
+            for(var j=0;j<list.length;j++){
+                if (list[j] == 1){
+                    continue;
                 }
-                tmp2 += (list[tmp] * formerDict[tmp1]);
-                tmp++;
-                tmp1++;
+                tmp += (list[j] * formerList[j]);
             }
-            var score = 0.15 + (0.85 * tmp2 / (formerDict.length-1));
-            latterDict.push(score);
+            var score = 0.15 + (0.85 * tmp / (formerList.length-1));
+            latterList.push(score);
         }
     }
-    return latterDict;
+    return latterList;
 }
 
 function xHighestScore(sentenceScores, x) {
@@ -191,15 +91,18 @@ function xHighestScore(sentenceScores, x) {
     return list[x - 1];
 }
 
-function topSentences(allSentences, sentenceScores, threshold) {
+function topSentences(allSentences, sentenceScores, threshold, numOfSentences) {
     // trả danh sách các câu có điểm > threhold
     var result = [];
-    for (var i = 0; i < allSentences.length; i++)
-        if (sentenceScores[i] >= threshold)
+    for (var i = 0; i < allSentences.length; i++){
+        if (sentenceScores[i] >= threshold){
             result.push(allSentences[i]);
+            if(result.length == numOfSentences)
+                break;
+        }
+    }
     return result;
 }
-
 
 module.exports = {
     getSentencesSimilarity,

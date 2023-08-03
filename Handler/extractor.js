@@ -11,12 +11,13 @@ function numOfSentences(sentence) {
 
 function getSentences(sentence) {
     // xử lý dữ liệu nhập vào trả về list các câu
-    sentence = sentence.replaceAll(/(\r\n|\n|\r)/gm, " ");
     sentence = parser.removeNumTag(sentence);
+    sentence = sentence.replaceAll(/(\r\n|\n|\r|\t)/gm, " ");
     sentence = parser.convertAbbreviations(sentence);
     sentence = sentence.replaceAll("?", ".");
     sentence = sentence.replaceAll("!", ".");
     var sentences = sentence.split(". ");
+    sentences[sentences.length-1] = sentences[sentences.length-1].replace(/\.$/, '');
     sentences = parser.fixBrokenSentences(sentences);
     sentences = parser.removeWhiteSpaceList(sentences);
     sentences = parser.removeBlanks(sentences);

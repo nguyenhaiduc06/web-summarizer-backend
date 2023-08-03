@@ -44,8 +44,6 @@ function count(sentence, occurence) {
 }
 
 function groupQuotes(sentences) {
-    // Trích dẫn (Quotes) phải là 1 câu kể cả có dấu câu trong đó (ex: "trích từ Bố là chó. Mẹ là Mèo")
-    // Ở đây ta nhóm các Quotes lại
     var newList = [];
     var skip = 0;
     for (var i = 0; i < sentences.length; i++) {
@@ -63,6 +61,7 @@ function groupQuotes(sentences) {
             else
                 sentence += sentences[i + skip];
         }
+        console.log(sentence);
         newList.push(sentence);
     }
     return newList;
@@ -131,18 +130,16 @@ function fixBrokenSentences(sentences) {
     var flag = false;
     for (var i = 0; i < sentences.length; i++) {
         var sentence = sentences[i];
-        if (flag) {
-            flag = false;
-            continue;
-        }
         var tArray = sentence.split(" ");
         var lastWord = tArray[tArray.length - 1];
         lastWord = removePunctuation(lastWord);
         lastWord = toSingular(lastWord);
         lastWord = removePunctuation(lastWord);
         lastWord += ".";
-        newList.push(sentence);
-
+        if (flag) {
+            flag = false;
+        }
+        else newList.push(sentence);
         for (var word of abbreviations) {
             if (word == lastWord) {
                 newList[newList.length - 1] += "." + sentences[i + 1];
@@ -199,9 +196,8 @@ function removeWhiteSpaceList(sentences) {
 
 function removeNumTag(sentence){
     var newSentence = sentence;
-    newSentence = newSentence.replaceAll("[", " [");
     for(var i=0;i<99999;i++)
-        newSentence = newSentence.replaceAll("[" + i +"]", "");
+        newSentence = newSentence.replaceAll("[" + i +"]", " ");
     return newSentence;
 }
 
